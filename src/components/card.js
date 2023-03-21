@@ -1,4 +1,6 @@
-const Card = (article) => {
+import axios from 'axios';
+
+const Card = (articleobj) => {
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -17,7 +19,47 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+
+//create elements
+
+  const theCard = document.createElement('div');
+  const theHeadline = document.createElement('div');
+  const theAuthor = document.createElement('div');
+  const theImage = document.createElement('img');
+  const theImageDiv = document.createElement('div');
+  const theAuthorName = document.createElement('span');
+
+
+//add class names
+
+  theCard.classList.add('card');
+  theHeadline.classList.add('headline');
+  theAuthor.classList.add('author');
+  theImageDiv.classList.add('img-container');
+
+//add 
+  theCard.appendChild(theHeadline);
+  theCard.appendChild(theAuthor);
+  theImageDiv.appendChild(theImage);
+
+  theAuthor.appendChild(theImageDiv);
+  theAuthor.appendChild(theAuthorName);
+
+
+
+//add text content
+theHeadline.textContent = articleobj.headline;
+theAuthorName.textContent = articleobj.authorName;
+theImage.src = articleobj.authorPhoto;
+
+
+
+return theCard
 }
+
+
+
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -28,6 +70,25 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
-}
 
-export { Card, cardAppender }
+
+  axios.get(`http://localhost:5001/api/articles`).then(response => {
+    console.log(response)
+
+    const articles = response.data.articles
+
+    for (let cat in articles) {
+      articles[cat].forEach(art => { 
+        
+        const articleCard = Card (art)
+        console.log(articleCard)
+        document.querySelector(selector).append(articleCard)
+      })
+    }
+  })
+
+
+}
+//console.log(cardAppender)
+
+export { Card, cardAppender };
